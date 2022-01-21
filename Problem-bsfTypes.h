@@ -1,6 +1,6 @@
 /*==============================================================================
 Project: Linear programming by deep neural network
-Theme: LP visualization
+Theme: Visualization of Linear Programming Problem (ViLiPP)
 Module: Problem-bsfTypes.h (Predefined Problem-depended BSF Types)
 Prefix: PT_bsf
 Author: Nikolay A. Olkhovsky

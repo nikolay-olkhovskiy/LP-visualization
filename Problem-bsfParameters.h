@@ -1,6 +1,6 @@
 /*==============================================================================
 Project: Linear programming by deep neural network
-Theme: LP visualization
+Theme: Visualization of Linear Programming Problem (ViLiPP)
 Module: Problem-bsfParameters.h (BSF-skeleton parameters)
 Prefix: PP_BSF
 Author: Nikolay A. Olkhovsky

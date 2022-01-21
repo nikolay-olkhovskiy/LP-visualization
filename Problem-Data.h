@@ -1,6 +1,6 @@
 /*==============================================================================
 Project: Linear programming by deep neural network
-Theme: LP visualization
+Theme: Visualization of Linear Programming Problem (ViLiPP)
 Module: Problem-Data.h (Problem Data)
 Prefix: PD
 Author: Nikolay A. Olkhovsky
