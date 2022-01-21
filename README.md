@@ -1,1 +1,1 @@
-Рабочий репозиторий для реализации алгоритма визуализации задачи ЛП.
+Visualization algorithm for linear programming (VisAPro).
