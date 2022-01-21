@@ -1,1 +1,1 @@
-Visualization algorithm for linear programming (VisAPro).
+ViLiPP: Visualization of Linear Programming Problem.
