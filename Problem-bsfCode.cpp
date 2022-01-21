@@ -1,10 +1,10 @@
 /*==============================================================================
-Project: Bulk Synchronous Farm (BSF)
-Theme: BSF Skeleton
+Project: Linear programming by deep neural network
+Theme: LP visualization
 Module: Problem-bsfCode.cpp (Problem-dependent Code)
 Prefix: PC
-Author: Leonid B. Sokolinsky
-This source code is a part of BSF Skeleton (https://github.com/leonid-sokolinsky/BSF-skeleton)
+Author: Nikolay A. Olkhovsky
+This source code is developed based on the BSF skeleton (https://github.com/leonid-sokolinsky/BSF-skeleton)
 ==============================================================================*/
 #include "Problem-Data.h"			// Problem Types 
 #include "Problem-Forwards.h"		// Problem Function Forwards
