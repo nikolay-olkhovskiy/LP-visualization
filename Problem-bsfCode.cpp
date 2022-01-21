@@ -14,15 +14,17 @@ using namespace std;
 
 //----------------------- Predefined problem-dependent functions -----------------
 void PC_bsf_Init(bool* success) {
-
+	// Посчитать z
 }
 
 void PC_bsf_SetListSize(int* listSize) {
-
+	*listSize = (int)PD_m;
 }
 
 void PC_bsf_CopyParameter(PT_bsf_parameter_T parameterIn, PT_bsf_parameter_T* parameterOutP) {
-
+	parameterOutP->pointNo = parameterIn.pointNo;
+	for (int i = 0; i < PD_n; i++)
+		parameterOutP->receptivePoint[i] = parameterIn.receptivePoint[i];
 }
 
 void PC_bsf_MapF(PT_bsf_mapElem_T* mapElem, PT_bsf_reduceElem_T* reduceElem, int* success) {	// For Job 0
@@ -42,7 +44,7 @@ void PC_bsf_MapF_3(PT_bsf_mapElem_T* mapElem, PT_bsf_reduceElem_T_3* reduceElem,
 }
 
 void PC_bsf_ReduceF(PT_bsf_reduceElem_T* x, PT_bsf_reduceElem_T* y, PT_bsf_reduceElem_T* z) {			// For Job 0
-	// z = x (+) y
+	z->objectiveDistance = PF_MIN(x->objectiveDistance, y->objectiveDistance);
 }
 
 void PC_bsf_ReduceF_1(PT_bsf_reduceElem_T_1* x, PT_bsf_reduceElem_T_1* y, PT_bsf_reduceElem_T_1* z) {	// For Job 1
@@ -64,7 +66,19 @@ void PC_bsf_ProcessResults(		// For Job 0
 	int* nextJob,
 	bool* exit 
 ) {
+	if (...) {
+		PD_retina_k++;
+		PD_I[PD_retina_k] = reduceResult->objectiveDistance;
+	};
 
+	PD_recept_k++;
+	G(parameter->pointNo, parameter->receptivePoint);
+
+	if(parameter->pointNo == PD_K)
+		*exit = true;
+	else
+		*exit = false;
+	parameter->pointNo = 0;
 }
 
 void PC_bsf_ProcessResults_1(	// For Job 1	
@@ -169,11 +183,12 @@ void PC_bsf_ProblemOutput_3(PT_bsf_reduceElem_T_3* reduceResult, int reduceCount
 }
 
 void PC_bsf_SetInitParameter(PT_bsf_parameter_T* parameter) {
-
+	parameter->pointNo = 0;
+	G(parameter->pointNo, parameter->receptivePoint);
 }
 
 void PC_bsf_SetMapListElem(PT_bsf_mapElem_T* elem, int i) {
-
+	elem->inequalityNo = i;
 }
 
 //----------------------- Assigning Values to BSF-skeleton Variables (Do not modify!) -----------------------
@@ -188,3 +203,6 @@ void PC_bsfAssignParameter(PT_bsf_parameter_T parameter) { PC_bsf_CopyParameter(
 void PC_bsfAssignSublistLength(int value) { BSF_sv_sublistLength = value; }
 
 //----------------------------- User functions -----------------------------
+inline void G(int pointNo, PT_vector_T receptivePoint) {
+
+};

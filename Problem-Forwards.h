@@ -8,3 +8,4 @@ This source code is developed based on the BSF skeleton (https://github.com/leon
 #include "Problem-bsfTypes.h"	// Predefined BSF types
 #include "Problem-Types.h"		// Problem Types
 //====================== Problem Functions ===========================
+inline void G(int pointNo, PT_vector_T receptivePoint);
