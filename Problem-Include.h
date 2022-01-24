@@ -8,4 +8,6 @@ This source code is developed based on the BSF skeleton (https://github.com/leon
 #pragma once
 #include <iomanip>
 #include <iostream>
+#include <string>
+#include <vector>
 #include <omp.h>

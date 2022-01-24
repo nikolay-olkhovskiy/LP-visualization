@@ -13,8 +13,69 @@ This source code is developed based on the BSF skeleton (https://github.com/leon
 using namespace std;
 
 //----------------------- Predefined problem-dependent functions -----------------
-void PC_bsf_Init(bool* success) {
-	// Посчитать z
+void PC_bsf_Init(int argc, char* argv[], bool* success) {
+	FILE* stream;
+	PT_float_T buf;
+	
+	// ------------- Load LPP data -------------------
+
+	PD_lppFile = PP_PATH;
+	PD_lppFile += PP_LPP_FILE;
+	const char* lppFile = PD_lppFile.c_str();
+	stream = fopen(lppFile, "r");
+	if (stream == NULL) {
+		if (BSF_sv_mpiRank == BSF_sv_mpiMaster)
+			cout << "Failure of opening file '" << lppFile << "'.\n";
+		*success = false; 
+		system("pause");
+		return;
+	}
+
+	if (fscanf(stream, "%d%d", &PD_m, &PD_n) == 0) { 
+		if (BSF_sv_mpiRank == BSF_sv_mpiMaster) 
+			cout << "Unexpected end of file" << endl; 
+		*success = false; 
+		system("pause");
+		return; 
+	}
+
+	for (int i = 0; i < PD_m; i++) {
+		for (int j = 0; j < PD_n; j++) {
+			if (fscanf(stream, "%f", &buf) == 0) { 
+				if (BSF_sv_mpiRank == BSF_sv_mpiMaster) 
+					cout << "Unexpected end of file" << endl; 
+				*success = false; 
+				system("pause");
+				return; 
+			}
+			PD_A[i][j] = buf;
+		}
+		if (fscanf(stream, "%f", &buf) == 0) { 
+			if (BSF_sv_mpiRank == BSF_sv_mpiMaster) 
+				cout << "Unexpected end of file" << endl; 
+			*success = false; 
+			system("pause");
+			return; 
+		}
+		PD_b[i] = buf;
+	}
+
+	for (int j = 0; j < PD_n; j++) {
+		if (fscanf(stream, "%f", &buf) == 0) { 
+			if (BSF_sv_mpiRank == BSF_sv_mpiMaster) 
+				cout << "Unexpected end of file" << endl; 
+			*success = false; 
+			system("pause");
+			return; 
+		}
+		PD_c[j] = buf;
+	}
+	fclose(stream);
+
+	// ------------- Read command line parameters -----------
+
+	for (int i = 0; i < PD_n; i++)
+		PD_z[i] = atof(argv[i + 1]);
 }
 
 void PC_bsf_SetListSize(int* listSize) {
@@ -66,11 +127,18 @@ void PC_bsf_ProcessResults(		// For Job 0
 	int* nextJob,
 	bool* exit 
 ) {
-	if (...) {
-		PD_retina_k++;
-		PD_I[PD_retina_k] = reduceResult->objectiveDistance;
-	};
-
+	//if (...) {
+	//	PD_retina_k++;
+	//	PD_I[PD_retina_k] = reduceResult->objectiveDistance;
+	//};
+	cout << "Dimensions: " << PD_n << endl;
+	cout << "Number of inequalities: " << PD_m << endl;
+	cout << "Receptive field coordinates: ";
+	for (int i = 0; i < PD_n; i++) {
+		cout << PD_z[i] << " ";
+	}
+	cout << endl;
+	system("pause");
 	PD_recept_k++;
 	G(parameter->pointNo, parameter->receptivePoint);
 

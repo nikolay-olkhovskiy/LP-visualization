@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 	PC_bsfAssignNumOfWorkers(1);
 
 	BD_success = true;
-	PC_bsf_Init(&BD_success);
+	PC_bsf_Init(argc, argv, &BD_success);
 	if (!BD_success) {
 		cout << "Error: PC_bsf_Init failed!" << endl;
 		exit(1);

@@ -7,7 +7,7 @@ Author: Nikolay A. Olkhovsky
 This source code is developed based on the BSF skeleton (https://github.com/leonid-sokolinsky/BSF-skeleton)
 ==============================================================================*/
 #include "Problem-Types.h"			// Problem Parameters 
-
+using namespace std;
 //========================== Problem variables ====================================
 static int		PD_n;		// Space dimension
 static int		PD_m;		// Number of inequalities
@@ -20,4 +20,15 @@ static PT_column_T PD_b;	// Column of the constant terms of the system Ax <= b
 static PT_vector_T PD_c;	// Coefficients of the objective function <c,x>
 static PT_vector_T PD_g;	// Point of retina
 static PT_vector_T PD_z;	// Center of retina
+static PT_test_T PD_test;
 static PT_float_T PD_I[PP_MAX_K]; // Retina
+//========================== Files ================================================
+static string PD_lppFile; /* LPP file in the following format:
+------------ begin of file -------------
+m n
+A_11 A_12 ... A_1n b_1
+A_21 A_22 ... A_2n b_2
+...
+A_m1 A_m2 ... A_mn b_m
+c_1 c_2 ... c_n
+------------ end of file----------------*/
