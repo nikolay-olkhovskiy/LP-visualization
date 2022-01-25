@@ -76,6 +76,8 @@ void PC_bsf_Init(int argc, char* argv[], bool* success) {
 	}
 	fclose(stream);
 
+	basis_Init();
+
 	// ------------- Read command line parameters -----------
 	PD_z.resize(PD_n);
 	for (int i = 0; i < PD_n; i++)
@@ -143,6 +145,7 @@ void PC_bsf_ProcessResults(		// For Job 0
 		cout << PD_z[i] << " ";
 	}
 	cout << endl;
+	basis_Print();
 	system("pause");
 	PD_recept_k++;
 	G(parameter->pointNo, parameter->receptivePoint);
@@ -277,6 +280,24 @@ void PC_bsfAssignParameter(PT_bsf_parameter_T parameter) { PC_bsf_CopyParameter(
 void PC_bsfAssignSublistLength(int value) { BSF_sv_sublistLength = value; }
 
 //----------------------------- User functions -----------------------------
+inline void basis_Init() {
+	//PD_c
+	int j;
+	PD_E.resize(PD_n);
+	PD_E[0] = PD_c;
+	for (int i = 1; i < PD_n; i++) {
+		PD_E[i].resize(PD_n);
+		for(j = 0; j < i; j++)	PD_E[i][j] = 0;
+		PD_E[i][i - 1] = (- 1. * accumulate(begin(PD_c) + i, end(PD_c), 0.)) / PD_c[i - 1];
+		for (; j < PD_n; j++) { PD_E[i][j] = PD_c[j]; }
+	}
+}
+inline void basis_Print() {
+	for (int i = 0; i < PD_E.size(); i++) {
+		copy(begin(PD_E[i]), end(PD_E[i]), ostream_iterator<PT_float_T>(cout, " "));
+		cout << endl;
+	}
+}
 inline void G(int pointNo, PT_vector_T receptivePoint) {
 
 };
