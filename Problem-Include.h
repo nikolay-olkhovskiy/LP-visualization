@@ -9,5 +9,5 @@ This source code is developed based on the BSF skeleton (https://github.com/leon
 #include <iomanip>
 #include <iostream>
 #include <string>
-#include <vector>
+#include <valarray>
 #include <omp.h>

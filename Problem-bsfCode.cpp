@@ -39,7 +39,10 @@ void PC_bsf_Init(int argc, char* argv[], bool* success) {
 		return; 
 	}
 
+	PD_A.resize(PD_m);
+	PD_b.resize(PD_m);
 	for (int i = 0; i < PD_m; i++) {
+		PD_A[i].resize(PD_n);
 		for (int j = 0; j < PD_n; j++) {
 			if (fscanf(stream, "%f", &buf) == 0) { 
 				if (BSF_sv_mpiRank == BSF_sv_mpiMaster) 
@@ -60,6 +63,7 @@ void PC_bsf_Init(int argc, char* argv[], bool* success) {
 		PD_b[i] = buf;
 	}
 
+	PD_c.resize(PD_n);
 	for (int j = 0; j < PD_n; j++) {
 		if (fscanf(stream, "%f", &buf) == 0) { 
 			if (BSF_sv_mpiRank == BSF_sv_mpiMaster) 
@@ -73,7 +77,7 @@ void PC_bsf_Init(int argc, char* argv[], bool* success) {
 	fclose(stream);
 
 	// ------------- Read command line parameters -----------
-
+	PD_z.resize(PD_n);
 	for (int i = 0; i < PD_n; i++)
 		PD_z[i] = atof(argv[i + 1]);
 }
@@ -84,6 +88,7 @@ void PC_bsf_SetListSize(int* listSize) {
 
 void PC_bsf_CopyParameter(PT_bsf_parameter_T parameterIn, PT_bsf_parameter_T* parameterOutP) {
 	parameterOutP->pointNo = parameterIn.pointNo;
+	parameterOutP->receptivePoint.resize(parameterIn.receptivePoint.size());
 	for (int i = 0; i < PD_n; i++)
 		parameterOutP->receptivePoint[i] = parameterIn.receptivePoint[i];
 }
@@ -252,6 +257,7 @@ void PC_bsf_ProblemOutput_3(PT_bsf_reduceElem_T_3* reduceResult, int reduceCount
 
 void PC_bsf_SetInitParameter(PT_bsf_parameter_T* parameter) {
 	parameter->pointNo = 0;
+	parameter->receptivePoint.resize(PD_n);
 	G(parameter->pointNo, parameter->receptivePoint);
 }
 
