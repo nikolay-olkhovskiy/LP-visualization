@@ -11,4 +11,5 @@ This source code is developed based on the BSF skeleton (https://github.com/leon
 #include <string>
 #include <valarray>
 #include <numeric>
+#include <vector>
 #include <omp.h>

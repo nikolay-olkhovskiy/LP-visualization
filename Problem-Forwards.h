@@ -10,4 +10,4 @@ This source code is developed based on the BSF skeleton (https://github.com/leon
 //====================== Problem Functions ===========================
 inline void basis_Init();
 inline void basis_Print();
-inline void G(int pointNo, PT_vector_T receptivePoint);
+inline void G(PT_bsf_parameter_T* parameter);

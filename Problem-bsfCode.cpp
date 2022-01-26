@@ -148,7 +148,7 @@ void PC_bsf_ProcessResults(		// For Job 0
 	basis_Print();
 	system("pause");
 	PD_recept_k++;
-	G(parameter->pointNo, parameter->receptivePoint);
+	G(parameter);
 
 	if(parameter->pointNo == PD_K)
 		*exit = true;
@@ -261,7 +261,7 @@ void PC_bsf_ProblemOutput_3(PT_bsf_reduceElem_T_3* reduceResult, int reduceCount
 void PC_bsf_SetInitParameter(PT_bsf_parameter_T* parameter) {
 	parameter->pointNo = 0;
 	parameter->receptivePoint.resize(PD_n);
-	G(parameter->pointNo, parameter->receptivePoint);
+	G(parameter);
 }
 
 void PC_bsf_SetMapListElem(PT_bsf_mapElem_T* elem, int i) {
@@ -288,7 +288,7 @@ inline void basis_Init() {
 	for (int i = 1; i < PD_n; i++) {
 		PD_E[i].resize(PD_n);
 		for(j = 0; j < i; j++)	PD_E[i][j] = 0;
-		PD_E[i][i - 1] = (- 1. * accumulate(begin(PD_c) + i, end(PD_c), 0.)) / PD_c[i - 1];
+		PD_E[i][i - 1] = (- 1. * accumulate(begin(PD_c) + i, end(PD_c), 0.)) / PD_c[i - 1]; //Possible division by zero!
 		for (; j < PD_n; j++) { PD_E[i][j] = PD_c[j]; }
 	}
 }
@@ -298,6 +298,21 @@ inline void basis_Print() {
 		cout << endl;
 	}
 }
-inline void G(int pointNo, PT_vector_T receptivePoint) {
+inline void G(PT_bsf_parameter_T *parameter) {
+	PT_point_T tempPoint;
+	PT_integer_T dimensionPointsNumber;
+	vector<PT_integer_T> i;
+	int pointNo = parameter->pointNo;
 
+	i.resize(PD_n - 1);
+	for (int j = PD_n - 1; j > 0; j--) {
+		dimensionPointsNumber = powf(2 * PP_ETA + 1, j - 1); //Possible overfilling!
+		i[j - 1] = pointNo / dimensionPointsNumber;
+		pointNo = pointNo % dimensionPointsNumber;
+	}
+	tempPoint = PD_z;
+	for (int j = 1; j < PD_n; j++) {
+		tempPoint += PD_E[j] * (i[j - 1] * PP_DELTA - PP_ETA * PP_DELTA);
+	}
+	parameter->receptivePoint = tempPoint;
 };
