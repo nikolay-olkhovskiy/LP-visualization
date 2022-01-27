@@ -283,6 +283,7 @@ void PC_bsfAssignSublistLength(int value) { BSF_sv_sublistLength = value; }
 inline void basis_Init() {
 	//PD_c
 	int j;
+	PT_float_T length;
 	PD_E.resize(PD_n);
 	PD_E[0] = PD_c;
 	for (int i = 1; i < PD_n; i++) {
@@ -290,6 +291,8 @@ inline void basis_Init() {
 		for(j = 0; j < i; j++)	PD_E[i][j] = 0;
 		PD_E[i][i - 1] = (- 1. * accumulate(begin(PD_c) + i, end(PD_c), 0.)) / PD_c[i - 1]; //Possible division by zero!
 		for (; j < PD_n; j++) { PD_E[i][j] = PD_c[j]; }
+		length = sqrt(pow(PD_E[i], 2.).sum());
+		PD_E[i] /= length;
 	}
 }
 inline void basis_Print() {
