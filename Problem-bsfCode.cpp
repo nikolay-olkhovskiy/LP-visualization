@@ -336,3 +336,10 @@ inline bool parameterOutOfRetina(PT_bsf_parameter_T* parameter) {
 	PT_float_T distanceToZ = sqrt(pow(parameter->receptivePoint - PD_z, 2.).sum());
 	return distanceToZ > PP_ETA * PP_DELTA;
 }
+inline bool isInnerPoint(PT_point_T point) {
+	bool result = true;
+	for (int i = 0; i < PD_m; i++)
+		if ((PD_A[i] * point).sum() > PD_b[i])
+			result = false;
+	return result;
+}

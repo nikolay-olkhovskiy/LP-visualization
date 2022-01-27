@@ -12,3 +12,4 @@ inline void basis_Init();
 inline void basis_Print();
 inline void G(PT_bsf_parameter_T* parameter);
 inline bool parameterOutOfRetina(PT_bsf_parameter_T* parameter);
+inline bool isInnerPoint(PT_point_T point);
