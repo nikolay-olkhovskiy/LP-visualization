@@ -22,7 +22,7 @@ static PT_matrix_T PD_E;	// Matrix of vectors e(i) forming basis othogonal to ob
 static PT_point_T PD_g;	// Point of retina
 static PT_point_T PD_z;	// Center of retina
 
-static PT_float_T PD_I[PP_MAX_K]; // Retina
+static PT_image_T PD_I; // Retina
 //========================== Files ================================================
 static string PD_lppFile; /* LPP file in the following format:
 ------------ begin of file -------------

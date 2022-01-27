@@ -150,6 +150,8 @@ void PC_bsf_ProcessResults(		// For Job 0
 	PD_recept_k++;
 	G(parameter);
 
+	PD_I.push_back(reduceResult->objectiveDistance);
+
 	if(parameter->pointNo == PD_K)
 		*exit = true;
 	else

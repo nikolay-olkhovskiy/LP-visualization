@@ -16,3 +16,4 @@ typedef std::valarray<PT_float_T>	PT_vector_T;
 typedef std::valarray<PT_vector_T>	PT_matrix_T;
 typedef std::valarray<PT_float_T>	PT_point_T;
 typedef std::valarray<PT_float_T>	PT_column_T;
+typedef std::vector<PT_float_T>		PT_image_T;
