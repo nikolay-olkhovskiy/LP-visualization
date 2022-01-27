@@ -78,6 +78,8 @@ void PC_bsf_Init(int argc, char* argv[], bool* success) {
 
 	basis_Init();
 
+	PD_K = powf(2 * PP_ETA + 1, PD_n - 1);
+
 	// ------------- Read command line parameters -----------
 	PD_z.resize(PD_n);
 	for (int i = 0; i < PD_n; i++)
@@ -146,29 +148,13 @@ void PC_bsf_ProcessResults(		// For Job 0
 	int* nextJob,
 	bool* exit 
 ) {
-	//if (...) {
-	//	PD_retina_k++;
-	//	PD_I[PD_retina_k] = reduceResult->objectiveDistance;
-	//};
-	cout << "Dimensions: " << PD_n << endl;
-	cout << "Number of inequalities: " << PD_m << endl;
-	cout << "Receptive field coordinates: ";
-	for (int i = 0; i < PD_n; i++) {
-		cout << PD_z[i] << " ";
-	}
-	cout << endl;
-	basis_Print();
-	system("pause");
-	PD_recept_k++;
-	G(parameter);
-
 	PD_I.push_back(reduceResult->objectiveDistance);
+	do {
+		parameter->pointNo += 1;
+		G(parameter);
+	} while (parameter->pointNo < PD_K && parameterOutOfRetina(parameter));
 
-	if(parameter->pointNo == PD_K)
-		*exit = true;
-	else
-		*exit = false;
-	parameter->pointNo = 0;
+	*exit = (parameter->pointNo < PD_K);
 }
 
 void PC_bsf_ProcessResults_1(	// For Job 1	
@@ -221,14 +207,23 @@ void PC_bsf_ParametersOutput(PT_bsf_parameter_T parameter) {
 #else
 	cout << "OpenMP is turned off!" << endl;
 #endif // PP_BSF_OMP
-
+	cout << "Dimensions: " << PD_n << endl;
+	cout << "Number of inequalities: " << PD_m << endl;
+	cout << "Receptive field coordinates: ";
+	for (int i = 0; i < PD_n; i++) {
+		cout << PD_z[i] << " ";
+	}
+	cout << endl;
+	basis_Print();
+	system("pause");
 }
 
 void PC_bsf_IterOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, PT_bsf_parameter_T parameter,
 	double elapsedTime, int jobCase) {	// For Job 0
 	cout << "------------------ " << BSF_sv_iterCounter << " ------------------" << endl;
-
-
+	cout << "Dimensions: " << PD_n << endl;
+	cout << "Number of inequalities: " << PD_m << endl;
+	system("pause");
 }
 
 void PC_bsf_IterOutput_1(PT_bsf_reduceElem_T_1* reduceResult, int reduceCounter, PT_bsf_parameter_T parameter,
@@ -254,7 +249,9 @@ void PC_bsf_IterOutput_3(PT_bsf_reduceElem_T_3* reduceResult, int reduceCounter,
 
 void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, PT_bsf_parameter_T parameter,
 	double t) {	// For Job 0
-
+	cout << "Dimensions: " << PD_n << endl;
+	cout << "Number of inequalities: " << PD_m << endl;
+	system("pause");
 }
 
 void PC_bsf_ProblemOutput_1(PT_bsf_reduceElem_T_1* reduceResult, int reduceCounter, PT_bsf_parameter_T parameter,
@@ -356,6 +353,7 @@ inline bool parameterOutOfRetina(PT_bsf_parameter_T* parameter) {
 	PT_float_T distanceToZ = sqrt(pow(parameter->receptivePoint - PD_z, 2.).sum());
 	return distanceToZ > PP_ETA * PP_DELTA;
 }
+
 inline bool isInnerPoint(PT_point_T point) {
 	bool result = true;
 	for (int i = 0; i < PD_m; i++)
