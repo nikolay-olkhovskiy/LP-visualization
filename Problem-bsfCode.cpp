@@ -96,7 +96,7 @@ void PC_bsf_CopyParameter(PT_bsf_parameter_T parameterIn, PT_bsf_parameter_T* pa
 }
 
 void PC_bsf_MapF(PT_bsf_mapElem_T* mapElem, PT_bsf_reduceElem_T* reduceElem, int* success) {	// For Job 0
-
+	reduceElem->objectiveDistance = 0.;
 }
 
 void PC_bsf_MapF_1(PT_bsf_mapElem_T* mapElem, PT_bsf_reduceElem_T_1* reduceElem, int* success) {// For Job 1
@@ -264,6 +264,10 @@ void PC_bsf_SetInitParameter(PT_bsf_parameter_T* parameter) {
 	parameter->pointNo = 0;
 	parameter->receptivePoint.resize(PD_n);
 	G(parameter);
+	while (parameterOutOfRetina(parameter)) {
+		parameter->pointNo += 1;
+		G(parameter);
+	}
 }
 
 void PC_bsf_SetMapListElem(PT_bsf_mapElem_T* elem, int i) {
@@ -321,3 +325,7 @@ inline void G(PT_bsf_parameter_T *parameter) {
 	}
 	parameter->receptivePoint = tempPoint;
 };
+inline bool parameterOutOfRetina(PT_bsf_parameter_T* parameter) {
+	PT_float_T distanceToZ = sqrt(pow(parameter->receptivePoint - PD_z, 2.).sum());
+	return distanceToZ > PP_ETA * PP_DELTA;
+}

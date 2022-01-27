@@ -11,3 +11,4 @@ This source code is developed based on the BSF skeleton (https://github.com/leon
 inline void basis_Init();
 inline void basis_Print();
 inline void G(PT_bsf_parameter_T* parameter);
+inline bool parameterOutOfRetina(PT_bsf_parameter_T* parameter);
