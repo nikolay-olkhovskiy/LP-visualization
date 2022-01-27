@@ -96,7 +96,12 @@ void PC_bsf_CopyParameter(PT_bsf_parameter_T parameterIn, PT_bsf_parameter_T* pa
 }
 
 void PC_bsf_MapF(PT_bsf_mapElem_T* mapElem, PT_bsf_reduceElem_T* reduceElem, int* success) {	// For Job 0
-	reduceElem->objectiveDistance = FP_INFINITE;
+	PT_point_T g = BSF_sv_parameter.receptivePoint;
+	int i = mapElem->inequalityNo;
+	if((PD_A[i] * PD_c).sum() > 0 && isInnerPoint(g))
+		reduceElem->objectiveDistance = targetDistance(targetProjection(i, g));
+	else
+		reduceElem->objectiveDistance = FP_INFINITE;
 }
 
 void PC_bsf_MapF_1(PT_bsf_mapElem_T* mapElem, PT_bsf_reduceElem_T_1* reduceElem, int* success) {// For Job 1
@@ -342,4 +347,14 @@ inline bool isInnerPoint(PT_point_T point) {
 		if ((PD_A[i] * point).sum() > PD_b[i])
 			result = false;
 	return result;
+}
+
+// Projection of receptive field point to recessive subspace gamma_i(x)
+inline PT_point_T targetProjection(int i, PT_point_T x) {
+	return x - (((PD_A[i] * x).sum() - PD_b[i]) / (PD_A[i] * PD_c).sum()) * PD_c;
+}
+
+// Distance from projection to retina rho_c(x)
+inline PT_float_T targetDistance(PT_point_T x) {
+	return (PD_c * (PD_z - x)).sum() / sqrt(pow(PD_c, 2.).sum());
 }

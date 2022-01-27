@@ -12,4 +12,8 @@ inline void basis_Init();
 inline void basis_Print();
 inline void G(PT_bsf_parameter_T* parameter);
 inline bool parameterOutOfRetina(PT_bsf_parameter_T* parameter);
+
+// Helper functions for MapF implementation
 inline bool isInnerPoint(PT_point_T point);
+inline PT_point_T targetProjection(int i, PT_point_T x);
+inline PT_float_T targetDistance(PT_point_T x);
