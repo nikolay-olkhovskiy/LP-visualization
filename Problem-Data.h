@@ -33,3 +33,11 @@ A_21 A_22 ... A_2n b_2
 A_m1 A_m2 ... A_mn b_m
 c_1 c_2 ... c_n
 ------------ end of file----------------*/
+static string PD_outFile; /* OUT file in the following format:
+------------ begin of file -------------
+m
+I_1
+I_2
+...
+I_m
+------------ end of file----------------*/

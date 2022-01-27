@@ -17,6 +17,7 @@ This source code is developed based on the BSF skeleton (https://github.com/leon
 #define PP_MAX_K	100000		// Maximal number of receptive field points
 #define PP_PATH		"./"	// Working directory of the application
 #define PP_LPP_FILE	"input_example.txt"	// File with initial data
+#define PP_OUT_FILE "image.txt"	// File with output results
 
 //-------------------------- Macroses ---------------------------
 #define PF_MIN(x,y) (x<y?x:y)
