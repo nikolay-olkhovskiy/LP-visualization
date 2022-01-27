@@ -101,7 +101,7 @@ void PC_bsf_MapF(PT_bsf_mapElem_T* mapElem, PT_bsf_reduceElem_T* reduceElem, int
 	if((PD_A[i] * PD_c).sum() > 0 && isInnerPoint(g))
 		reduceElem->objectiveDistance = targetDistance(targetProjection(i, g));
 	else
-		reduceElem->objectiveDistance = FP_INFINITE;
+		reduceElem->objectiveDistance = INFINITY;
 }
 
 void PC_bsf_MapF_1(PT_bsf_mapElem_T* mapElem, PT_bsf_reduceElem_T_1* reduceElem, int* success) {// For Job 1
@@ -124,7 +124,7 @@ void PC_bsf_ReduceF(PT_bsf_reduceElem_T* x, PT_bsf_reduceElem_T* y, PT_bsf_reduc
 	else if (isfinite(y->objectiveDistance))
 		z->objectiveDistance = y->objectiveDistance;
 	else
-		z->objectiveDistance = FP_INFINITE;
+		z->objectiveDistance = INFINITY;
 }
 
 void PC_bsf_ReduceF_1(PT_bsf_reduceElem_T_1* x, PT_bsf_reduceElem_T_1* y, PT_bsf_reduceElem_T_1* z) {	// For Job 1
@@ -302,15 +302,30 @@ inline void basis_Init() {
 	//PD_c
 	int j;
 	PT_float_T length;
+	PT_float_T tailSum;
+	PT_vector_T PD_c2 = pow(PD_c, 2.);
 	PD_E.resize(PD_n);
 	PD_E[0] = PD_c;
 	for (int i = 1; i < PD_n; i++) {
 		PD_E[i].resize(PD_n);
 		for(j = 0; j < i; j++)	PD_E[i][j] = 0;
-		PD_E[i][i - 1] = (- 1. * accumulate(begin(PD_c) + i, end(PD_c), 0.)) / PD_c[i - 1]; //Possible division by zero!
-		for (; j < PD_n; j++) { PD_E[i][j] = PD_c[j]; }
+		tailSum = accumulate(begin(PD_c2) + i, end(PD_c2), 0.);
+		if (tailSum == 0) {
+			PD_E[i][i - 1] = 0;
+			PD_E[i][i] = 1;
+			j++;
+			for (; j < PD_n; j++) { PD_E[i][j] = 0; }
+		}
+		else if (PD_c[i - 1] == 0.) {
+			PD_E[i][i - 1] = 1.;
+			for (; j < PD_n; j++) { PD_E[i][j] = 0; }
+		}
+		else {
+			PD_E[i][i - 1] = (-1. * tailSum) / PD_c[i - 1]; //Possible division by zero!
+			for (; j < PD_n; j++) { PD_E[i][j] = PD_c[j]; }
+		}
 		length = sqrt(pow(PD_E[i], 2.).sum());
-		PD_E[i] /= length;
+		//PD_E[i] /= length;
 	}
 }
 inline void basis_Print() {
