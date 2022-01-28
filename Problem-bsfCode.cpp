@@ -148,13 +148,13 @@ void PC_bsf_ProcessResults(		// For Job 0
 	int* nextJob,
 	bool* exit 
 ) {
-	PD_I.push_back(reduceResult->objectiveDistance);
+	PD_I.push_back(make_pair(parameter->receptivePoint, reduceResult->objectiveDistance));
 	do {
 		parameter->pointNo += 1;
 		G(parameter);
 	} while (parameter->pointNo < PD_K && parameterOutOfRetina(parameter));
 
-	*exit = (parameter->pointNo < PD_K);
+	*exit = (parameter->pointNo >= PD_K);
 }
 
 void PC_bsf_ProcessResults_1(	// For Job 1	
@@ -209,6 +209,9 @@ void PC_bsf_ParametersOutput(PT_bsf_parameter_T parameter) {
 #endif // PP_BSF_OMP
 	cout << "Dimensions: " << PD_n << endl;
 	cout << "Number of inequalities: " << PD_m << endl;
+	cout << "Receptive field rank: " << PP_ETA << endl;
+	cout << "Receptive field density: " << PP_DELTA << endl;
+	cout << "Maximum number of points: " << PD_K << endl;
 	cout << "Receptive field coordinates: ";
 	for (int i = 0; i < PD_n; i++) {
 		cout << PD_z[i] << " ";
@@ -221,8 +224,15 @@ void PC_bsf_ParametersOutput(PT_bsf_parameter_T parameter) {
 void PC_bsf_IterOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, PT_bsf_parameter_T parameter,
 	double elapsedTime, int jobCase) {	// For Job 0
 	cout << "------------------ " << BSF_sv_iterCounter << " ------------------" << endl;
-	cout << "Dimensions: " << PD_n << endl;
-	cout << "Number of inequalities: " << PD_m << endl;
+	cout << "Point number:\t" << parameter.pointNo << endl;
+	cout << "Point coordinates:\t";
+	copy(begin(parameter.receptivePoint), end(parameter.receptivePoint), ostream_iterator<PT_float_T>(cout, " "));
+	cout << endl;
+	cout << "Z coordinates:\t";
+	copy(begin(PD_z), end(PD_z), ostream_iterator<PT_float_T>(cout, " "));
+	cout << endl;
+	cout << "Field distance:\t" << sqrt(pow(parameter.receptivePoint - PD_z, 2.).sum()) << endl;
+	cout << "Receptive field rank:\t" << PP_ETA * PP_DELTA << endl;
 	system("pause");
 }
 
@@ -250,6 +260,7 @@ void PC_bsf_IterOutput_3(PT_bsf_reduceElem_T_3* reduceResult, int reduceCounter,
 void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, PT_bsf_parameter_T parameter,
 	double t) {	// For Job 0
 	int m = PD_I.size();
+	int n = PD_n;
 	PD_outFile = PP_PATH;
 	PD_outFile += PP_OUT_FILE;
 	const char* fileName = PD_outFile.c_str();
@@ -260,10 +271,13 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 		cout << "Failure of opening file " << fileName << "!\n";
 		return;
 	}
-	fprintf(stream, "%d\n", m);
+	fprintf(stream, "%d\t%d\n", m, n);
 
-	for (int j = 0; j < m; j++)
-		fprintf(stream, "%.4f\t", PD_I[j]);
+	for (int i = 0; i < m; i++) {
+		for(int j = 0; j < n; j++)
+			fprintf(stream, "%.4f\t", PD_I[i].first[j]);
+		fprintf(stream, "%.4f\n", PD_I[i].second);
+	}
 	fclose(stream);
 	cout << "LPP is saved into file '" << fileName << "'." << endl;
 	cout << "-----------------------------------" << endl;
@@ -338,7 +352,7 @@ inline void basis_Init() {
 			for (; j < PD_n; j++) { PD_E[i][j] = PD_c[j]; }
 		}
 		length = sqrt(pow(PD_E[i], 2.).sum());
-		//PD_E[i] /= length;
+		PD_E[i] /= length;
 	}
 }
 inline void basis_Print() {
