@@ -12,7 +12,7 @@ This source code is developed based on the BSF skeleton (https://github.com/leon
 #define PP_N		3			// Number of dimensions
 #define PP_MAX_M	50			// Maximal  number of inequalities
 //#define PP_MAX_N	50			// Maximal  space dimension
-#define PP_ETA		49			// Rank of receptive field 		
+#define PP_ETA		14			// Rank of receptive field 		
 #define PP_DELTA	1			// Density of receptive field
 #define PP_MAX_K	100000		// Maximal number of receptive field points
 #define PP_PATH		"./"	// Working directory of the application
