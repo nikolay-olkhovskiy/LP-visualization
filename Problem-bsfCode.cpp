@@ -13,7 +13,7 @@ This source code is developed based on the BSF skeleton (https://github.com/leon
 using namespace std;
 
 //----------------------- Predefined problem-dependent functions -----------------
-void PC_bsf_Init(int argc, char* argv[], bool* success) {
+void PC_bsf_Init(bool* success) {
 	FILE* stream;
 	PT_float_T buf;
 	
@@ -79,11 +79,6 @@ void PC_bsf_Init(int argc, char* argv[], bool* success) {
 	basis_Init();
 
 	PD_K = powf(2 * PP_ETA + 1, PD_n - 1);
-
-	// ------------- Read command line parameters -----------
-	PD_z.resize(PD_n);
-	for (int i = 0; i < PD_n; i++)
-		PD_z[i] = atof(argv[i + 1]);
 }
 
 void PC_bsf_SetListSize(int* listSize) {
