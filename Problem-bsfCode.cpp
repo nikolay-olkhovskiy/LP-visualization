@@ -27,7 +27,7 @@ void PC_bsf_Init(bool* success) {
 		if (BSF_sv_mpiRank == BSF_sv_mpiMaster)
 			cout << "Failure of opening file '" << lppFile << "'.\n";
 		*success = false; 
-		system("pause");
+//		system("pause");
 		return;
 	}
 
@@ -35,7 +35,7 @@ void PC_bsf_Init(bool* success) {
 		if (BSF_sv_mpiRank == BSF_sv_mpiMaster) 
 			cout << "Unexpected end of file" << endl; 
 		*success = false; 
-		system("pause");
+//		system("pause");
 		return; 
 	}
 
@@ -48,7 +48,7 @@ void PC_bsf_Init(bool* success) {
 				if (BSF_sv_mpiRank == BSF_sv_mpiMaster) 
 					cout << "Unexpected end of file" << endl; 
 				*success = false; 
-				system("pause");
+//				system("pause");
 				return; 
 			}
 			PD_A[i][j] = buf;
@@ -57,7 +57,7 @@ void PC_bsf_Init(bool* success) {
 			if (BSF_sv_mpiRank == BSF_sv_mpiMaster) 
 				cout << "Unexpected end of file" << endl; 
 			*success = false; 
-			system("pause");
+//			system("pause");
 			return; 
 		}
 		PD_b[i] = buf;
@@ -69,7 +69,7 @@ void PC_bsf_Init(bool* success) {
 			if (BSF_sv_mpiRank == BSF_sv_mpiMaster) 
 				cout << "Unexpected end of file" << endl; 
 			*success = false; 
-			system("pause");
+//			system("pause");
 			return; 
 		}
 		PD_c[j] = buf;
@@ -213,7 +213,7 @@ void PC_bsf_ParametersOutput(PT_bsf_parameter_T parameter) {
 	}
 	cout << endl;
 	basis_Print();
-	system("pause");
+//	system("pause");
 }
 
 void PC_bsf_IterOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, PT_bsf_parameter_T parameter,
@@ -228,7 +228,7 @@ void PC_bsf_IterOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, PT_
 	cout << endl;
 	cout << "Field distance:\t" << sqrt(pow(floatsToValarray(parameter.receptivePoint) - PD_z, 2.).sum()) << endl;
 	cout << "Receptive field rank:\t" << PP_ETA * PP_DELTA << endl;
-	system("pause");
+//	system("pause");
 }
 
 void PC_bsf_IterOutput_1(PT_bsf_reduceElem_T_1* reduceResult, int reduceCounter, PT_bsf_parameter_T parameter,
@@ -276,7 +276,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	fclose(stream);
 	cout << "LPP is saved into file '" << fileName << "'." << endl;
 	cout << "-----------------------------------" << endl;
-	system("pause");
+//	system("pause");
 }
 
 void PC_bsf_ProblemOutput_1(PT_bsf_reduceElem_T_1* reduceResult, int reduceCounter, PT_bsf_parameter_T parameter,
