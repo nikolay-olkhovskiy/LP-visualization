@@ -11,7 +11,7 @@ This source code is developed based on the BSF skeleton (https://github.com/leon
 //=========================== BSF Types =========================
 struct PT_bsf_parameter_T {		// Order parameters
 	int pointNo;				// Number of receptive point
-	PT_vector_T receptivePoint;	// Point of receptive field
+	PT_float_T receptivePoint[PP_MAX_N];	// Point of receptive field
 };
 
 struct PT_bsf_mapElem_T {		// Type of map-list elements

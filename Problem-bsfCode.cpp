@@ -87,18 +87,17 @@ void PC_bsf_SetListSize(int* listSize) {
 
 void PC_bsf_CopyParameter(PT_bsf_parameter_T parameterIn, PT_bsf_parameter_T* parameterOutP) {
 	parameterOutP->pointNo = parameterIn.pointNo;
-	parameterOutP->receptivePoint.resize(parameterIn.receptivePoint.size());
 	for (int i = 0; i < PD_n; i++)
 		parameterOutP->receptivePoint[i] = parameterIn.receptivePoint[i];
 }
 
 void PC_bsf_MapF(PT_bsf_mapElem_T* mapElem, PT_bsf_reduceElem_T* reduceElem, int* success) {	// For Job 0
-	PT_point_T g = BSF_sv_parameter.receptivePoint;
+	PT_point_T g = floatsToValarray(BSF_sv_parameter.receptivePoint);
 	int i = mapElem->inequalityNo;
 	if((PD_A[i] * PD_c).sum() > 0 && isInnerPoint(g))
 		reduceElem->objectiveDistance = targetDistance(targetProjection(i, g));
 	else
-		reduceElem->objectiveDistance = INFINITY;
+		reduceElem->objectiveDistance = HUGE_VALF;
 }
 
 void PC_bsf_MapF_1(PT_bsf_mapElem_T* mapElem, PT_bsf_reduceElem_T_1* reduceElem, int* success) {// For Job 1
@@ -121,7 +120,7 @@ void PC_bsf_ReduceF(PT_bsf_reduceElem_T* x, PT_bsf_reduceElem_T* y, PT_bsf_reduc
 	else if (isfinite(y->objectiveDistance))
 		z->objectiveDistance = y->objectiveDistance;
 	else
-		z->objectiveDistance = INFINITY;
+		z->objectiveDistance = HUGE_VALF;
 }
 
 void PC_bsf_ReduceF_1(PT_bsf_reduceElem_T_1* x, PT_bsf_reduceElem_T_1* y, PT_bsf_reduceElem_T_1* z) {	// For Job 1
@@ -143,7 +142,8 @@ void PC_bsf_ProcessResults(		// For Job 0
 	int* nextJob,
 	bool* exit 
 ) {
-	PD_I.push_back(make_pair(parameter->receptivePoint, reduceResult->objectiveDistance));
+	PT_vector_T g = floatsToValarray(parameter->receptivePoint);
+	PD_I.push_back(make_pair(g, reduceResult->objectiveDistance));
 	do {
 		parameter->pointNo += 1;
 		G(parameter);
@@ -226,7 +226,7 @@ void PC_bsf_IterOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, PT_
 	cout << "Z coordinates:\t";
 	copy(begin(PD_z), end(PD_z), ostream_iterator<PT_float_T>(cout, " "));
 	cout << endl;
-	cout << "Field distance:\t" << sqrt(pow(parameter.receptivePoint - PD_z, 2.).sum()) << endl;
+	cout << "Field distance:\t" << sqrt(pow(floatsToValarray(parameter.receptivePoint) - PD_z, 2.).sum()) << endl;
 	cout << "Receptive field rank:\t" << PP_ETA * PP_DELTA << endl;
 	system("pause");
 }
@@ -296,7 +296,6 @@ void PC_bsf_ProblemOutput_3(PT_bsf_reduceElem_T_3* reduceResult, int reduceCount
 
 void PC_bsf_SetInitParameter(PT_bsf_parameter_T* parameter) {
 	parameter->pointNo = 0;
-	parameter->receptivePoint.resize(PD_n);
 	G(parameter);
 	while (parameterOutOfRetina(parameter)) {
 		parameter->pointNo += 1;
@@ -320,6 +319,12 @@ void PC_bsfAssignParameter(PT_bsf_parameter_T parameter) { PC_bsf_CopyParameter(
 void PC_bsfAssignSublistLength(int value) { BSF_sv_sublistLength = value; }
 
 //----------------------------- User functions -----------------------------
+inline PT_point_T floatsToValarray(PT_float_T arr[]) {
+	PT_vector_T result(PD_n);
+	for (int i = 0; i < PD_n; i++)
+		result[i] = arr[i];
+	return result;
+}
 inline void basis_Init() {
 	//PD_c
 	int j;
@@ -372,10 +377,11 @@ inline void G(PT_bsf_parameter_T *parameter) {
 	for (int j = 1; j < PD_n; j++) {
 		tempPoint += PD_E[j] * (i[j - 1] * PP_DELTA - PP_ETA * PP_DELTA);
 	}
-	parameter->receptivePoint = tempPoint;
+	for(int i = 0; i < PD_n; i++)
+		parameter->receptivePoint[i] = tempPoint[i];
 };
 inline bool parameterOutOfRetina(PT_bsf_parameter_T* parameter) {
-	PT_float_T distanceToZ = sqrt(pow(parameter->receptivePoint - PD_z, 2.).sum());
+	PT_float_T distanceToZ = sqrt(pow(floatsToValarray(parameter->receptivePoint) - PD_z, 2.).sum());
 	return distanceToZ > PP_ETA * PP_DELTA;
 }
 
