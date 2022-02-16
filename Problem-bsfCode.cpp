@@ -254,9 +254,14 @@ void PC_bsf_ParametersOutput(PT_bsf_parameter_T parameter) {
 	cout << "Receptive field rank: " << PP_ETA << endl;
 	cout << "Receptive field density: " << PP_DELTA << endl;
 	cout << "Maximum number of points: " << PD_K << endl;
-	cout << "Receptive field coordinates: ";
+	cout << "Receptive field coordinates: " << endl;
 	for (int i = 0; i < PD_n; i++) {
 		cout << PD_z[i] << " ";
+	}
+	cout << endl;
+	cout << "Objective function coordinates: " << endl;
+	for (int i = 0; i < PD_n; i++) {
+		cout << PD_c[i] << " ";
 	}
 	cout << endl;
 	basis_Print();
