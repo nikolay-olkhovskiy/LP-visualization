@@ -14,7 +14,7 @@ This source code is developed based on the BSF skeleton (https://github.com/leon
 #define PP_MAX_N	120									// Maximal  space dimension
 #define PP_ETA		2									// Rank of receptive field 		
 #define PP_DELTA	1									// Density of receptive field
-#define PP_MAX_K	18446744073709550592ull				// Maximal number of receptive field points
+#define PP_MAX_K	2147483647							// Maximal number of receptive field points
 #define PP_PATH		"C:/Users/Akella/source/repos/nikolay-olkhovskiy/LP-visualization/"	// Working directory of the application
 //#define PP_PATH		"/home/olkhovskiina/"	// Working directory of the application
 //#define PP_LPP_FILE	"input_example.txt"	// File with initial data
